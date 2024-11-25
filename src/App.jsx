@@ -1,25 +1,22 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import CharactersDetails from "./components/CharactersDetails";
 import CharactersList from "./components/CharactersList";
 import Navbar from "./components/Navbar";
-import toast from "react-hot-toast";
+
 import { Toaster } from "react-hot-toast";
-import axios from "axios";
+
 import Search from "./components/Search";
 import { Favorites } from "./components/Navbar";
 import useCharacters from "./hooks/useCharacters";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App(){
  
   const {isLoading,allCharacters}=useCharacters(query)
   const [query,setQuery]=useState('');
   const [selectedId,setSelectedId]=useState(null)
-  const [favor,setFavor]=useState(()=>JSON.parse(localStorage.getItem('favorites'))||[]);
- 
-  useEffect(()=>{
-    localStorage.setItem('favorites',JSON.stringify(favor))
-  },[favor])
+  const [favor,setFavor]=useLocalStorage('favorites',[])
  
 
 // useEffect(()=>{
