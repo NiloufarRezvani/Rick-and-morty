@@ -8,10 +8,11 @@ import { Toaster } from "react-hot-toast";
 import axios from "axios";
 import Search from "./components/Search";
 import { Favorites } from "./components/Navbar";
+import useCharacters from "./hooks/useCharacters";
 
 function App(){
-  const [allCharacters,setCharacters]= useState([]);
-  const [isLoading,setIsLoading]=useState(false);
+ 
+  const {isLoading,allCharacters}=useCharacters(query)
   const [query,setQuery]=useState('');
   const [selectedId,setSelectedId]=useState(null)
   const [favor,setFavor]=useState(()=>JSON.parse(localStorage.getItem('favorites'))||[]);
@@ -20,30 +21,7 @@ function App(){
     localStorage.setItem('favorites',JSON.stringify(favor))
   },[favor])
  
-  useEffect(
-  ()=>{
-    const controller =new AbortController()
-    const signal =controller.signal
-    async function fetchData(){
-try{
-  setIsLoading(true)
-  const {data} = await axios.get(`https://rickandmortyapi.com/api/character?name=${query}`,{signal})
-  if(query.length>3){ setCharacters(data.results)}
-  setIsLoading(false)
-}catch(error){
-  setIsLoading(false)
-  setCharacters([])
-  toast.error(error.response.data.error)
-}finally{
-  setIsLoading(false)
-}
-    }
-    fetchData()
-    return ()=>{
-      controller.abort()
-    }
-  }
-  ,[query])
+
 // useEffect(()=>{
 //   setIsLoading(true);
 //   fetch("https://rickandmortyapi.com/api/character")
